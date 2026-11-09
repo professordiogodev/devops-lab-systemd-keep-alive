@@ -4,7 +4,7 @@ Fork URL: <!-- paste the URL of your fork here -->
 
 ## Files to commit
 
-- [ ] `clipstr.service`: your unit file, committed to the repo
+- [ ] `clippy.service`: your unit file, committed to the repo
 
 ## Questions
 
@@ -16,13 +16,13 @@ Answer in your own words. Where a question asks for output, paste it in a code b
 
 <!-- replace this line with your answer -->
 
-### Q2. Paste the journal lines showing systemd noticing your `kill -9` and restarting Clipstr (`Main process exited`, `Scheduled restart job`, `Started`).
+### Q2. Paste the journal lines showing systemd noticing your `kill -9` and restarting Clippy (`Main process exited`, `Scheduled restart job`, `Started`).
 
 **Your answer:**
 
 <!-- replace this line with your answer -->
 
-### Q3. You killed Clipstr with `kill -9` and with `kill -TERM`. Which one did `Restart=on-failure` bring back, and why? When would you choose `Restart=always` instead?
+### Q3. You killed Clippy with `kill -9` and with `kill -TERM`. Which one did `Restart=on-failure` bring back, and why? When would you choose `Restart=always` instead?
 
 **Your answer:**
 
@@ -34,7 +34,7 @@ Answer in your own words. Where a question asks for output, paste it in a code b
 
 <!-- replace this line with your answer -->
 
-### Q5. Paste the last line of `systemd-analyze security clipstr` before and after hardening. Name three directives you added and what each one prevents.
+### Q5. Paste the last line of `systemd-analyze security clippy` before and after hardening. Name three directives you added and what each one prevents.
 
 **Your answer:**
 

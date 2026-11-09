@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="302" viewBox="0 0 1000 302" role="img" aria-label="systemd: Keep Clipstr Alive">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="302" viewBox="0 0 1000 302" role="img" aria-label="systemd: Keep Clippy Alive">
 <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e1b4b"/><stop offset="1" stop-color="#4338ca"/></linearGradient><radialGradient id="glow" cx=".85" cy=".5" r=".6"><stop offset="0" stop-color="#fbbf24" stop-opacity=".28"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></radialGradient></defs>
 <rect width="1000" height="302" rx="18" fill="url(#bg)"/><rect width="1000" height="302" rx="18" fill="url(#glow)"/>
 <circle cx="60" cy="40" r="3" fill="#fbbf24" opacity=".7"><animate attributeName="opacity" values=".2;.9;.2" dur="3s" repeatCount="indefinite"/></circle>
 <text x="48" y="64" font-size="14" letter-spacing="3" fill="#fbbf24" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-weight="700">DEVOPS BOOTCAMP · LAB</text>
-<text x="48" y="112" font-size="40" font-weight="800" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif">systemd: Keep Clipstr</text>
+<text x="48" y="112" font-size="40" font-weight="800" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif">systemd: Keep Clippy</text>
 <text x="48" y="160" font-size="40" font-weight="800" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif">Alive</text>
-<text x="48" y="190" font-size="15" fill="#e2e8f0" opacity=".92" font-family="Segoe UI,Helvetica,Arial,sans-serif">Clipstr died on Friday evening and nobody noticed for three hours.</text>
-<text x="48" y="212" font-size="15" fill="#e2e8f0" opacity=".92" font-family="Segoe UI,Helvetica,Arial,sans-serif">Make the server keep it alive, then try to kill it.</text>
+<text x="48" y="190" font-size="15" fill="#e2e8f0" opacity=".92" font-family="Segoe UI,Helvetica,Arial,sans-serif">Clippy died on Friday evening and nobody noticed for three hours. Make</text>
+<text x="48" y="212" font-size="15" fill="#e2e8f0" opacity=".92" font-family="Segoe UI,Helvetica,Arial,sans-serif">the server keep it alive, then try to kill it.</text>
 <rect x="48" y="244" width="105" height="32" rx="16" fill="#ffffff" fill-opacity=".14" stroke="#fbbf24" stroke-opacity=".7"/><text x="62" y="265" font-size="14" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif">60-75 min</text>
 <rect x="165" y="244" width="114" height="32" rx="16" fill="#ffffff" fill-opacity=".14" stroke="#fbbf24" stroke-opacity=".7"/><text x="179" y="265" font-size="14" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif">Cost: free</text>
 <g transform="translate(750,51)">

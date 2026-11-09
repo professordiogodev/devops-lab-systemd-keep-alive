@@ -11,13 +11,13 @@ no_path() { [ ! -e "$1" ]; }
 no_proc() { ! pgrep -f "$1" >/dev/null 2>&1; }
 no_listener() { ! ss -ltn 2>/dev/null | grep -qE ":$1\\b"; }
 
-check "clipstr.service is not installed" no_path /etc/systemd/system/clipstr.service
-check "clipstr.service is not known to systemd" bash -c "! systemctl list-unit-files 2>/dev/null | grep -q '^clipstr.service'"
+check "clippy.service is not installed" no_path /etc/systemd/system/clippy.service
+check "clippy.service is not known to systemd" bash -c "! systemctl list-unit-files 2>/dev/null | grep -q '^clippy.service'"
 check "no uvicorn process is running" no_proc 'uvicorn api.main:app'
 check "port 8000 is free" no_listener 8000
-check "user clipstr is gone" no_user clipstr
-check "/opt/clipstr is gone" no_path /opt/clipstr
-check "/etc/clipstr is gone" no_path /etc/clipstr
+check "user clippy is gone" no_user clippy
+check "/opt/clippy is gone" no_path /opt/clippy
+check "/etc/clippy is gone" no_path /etc/clippy
 
 echo
 if [ "$failn" -eq 0 ]; then echo "TEARDOWN VERIFIED ($pass/$pass)"; else echo "NOT CLEAN: $failn leftover(s). Finish the tear down steps and run this again."; fi
