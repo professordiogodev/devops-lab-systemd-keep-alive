@@ -1,6 +1,4 @@
-# systemd: Keep Clipstr Alive
-
-Clipstr died on Friday evening and nobody noticed for three hours. Make the server keep it alive, then try to kill it.
+<p align="center"><img src="assets/banner.svg" alt="systemd: Keep Clipstr Alive" width="100%"></p>
 
 | | |
 |-|-|
@@ -17,9 +15,10 @@ Clipstr died on Friday evening and nobody noticed for three hours. Make the serv
 5. Commit and push. Open the **Actions** tab of your fork (click *I understand my workflows, go ahead and enable them* the first time). The **Lab check** shows what is still missing.
 6. When the check is green, **submit the URL of your fork** in the course platform.
 
+> [!NOTE]
 > The check only looks at your answers and any files the lab asks you to commit. Your instructor reads your work and may ask you to explain any line.
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## The situation
 
@@ -27,6 +26,7 @@ Friday, 18:02. Someone restarted the Clipstr staging server for a kernel update.
 
 On Monday your lead says: *"A server should keep our app alive by itself. Not a person, not a terminal. Make it so, and then try your best to kill it."*
 
+> [!IMPORTANT]
 > **Your mission**
 > - See why the current way of running Clipstr is fragile
 > - Turn Clipstr into a **systemd service** that starts at boot and restarts itself after a crash
@@ -35,7 +35,7 @@ On Monday your lead says: *"A server should keep our app alive by itself. Not a 
 
 **Time:** 60-75 min | **Cost:** free | **You need:** your Ubuntu environment with `sudo` (WSL with systemd, or your OrbStack machine). Open **two terminal tabs**: you will want logs in one while you act in the other.
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Part 0 - Set the scene
 
@@ -49,7 +49,7 @@ It installs Clipstr in `/opt/clipstr` and starts it the way it was started on Fr
 
 > `setup.sh` needs a systemd-enabled environment. On WSL, if it complains, follow the hint it prints (a two-line change in `/etc/wsl.conf`, then `wsl --shutdown` in PowerShell).
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Part 1 - Recon: how is it running today?
 
@@ -59,14 +59,16 @@ Keep notes of your findings, you will need them for your submission.
 2. Ask systemd about it: `systemctl status clipstr`. What does it say, and what does that tell you?
 3. Where do the app's logs go? (`cat /tmp/clipstr-manual.log`). Would they survive a reboot?
 
+> [!NOTE]
 > **Predict**
 > You are about to simulate the Friday reboot with `sudo ./chaos.sh reboot`. After it, what will `curl localhost:8000/healthz` return? Write your prediction down, run it, and compare.
 
 Run it, then `curl localhost:8000/healthz`.
 
+> [!NOTE]
 > **Think** Nothing "crashed" here and nobody made a mistake. What was missing?
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Part 2 - Build: make the server responsible
 
@@ -92,14 +94,16 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now clipstr
 ```
 
+> [!NOTE]
 > **Predict** Port 8000 is still used by the old manual process, if it is somehow still alive. What do you expect? (If you ran `chaos.sh reboot` it is dead, so the new service starts cleanly.)
 
+> [!TIP]
 > **Checkpoint**
 > - `systemctl status clipstr` shows `active (running)` and `enabled`
 > - `curl localhost:8000/healthz` now reports `"version":"systemd-v1"`
 > - Copy your finished unit file into the repo as `clipstr.service` and commit it
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Part 3 - Watch it live
 
@@ -118,24 +122,28 @@ curl -s localhost:8000/stats
 
 Watch the lines appear. These logs now live in the **journal**, not in a file somebody has to remember.
 
+> [!NOTE]
 > **Think** What did you gain compared with `/tmp/clipstr-manual.log`? Try `journalctl -u clipstr --since "5 minutes ago"` and `journalctl -u clipstr -p err`.
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Part 4 - Break it (three ways)
 
 ### 4.1 The crash
 
+> [!NOTE]
 > **Predict** You will kill Clipstr with `sudo ./chaos.sh kill` (a `kill -9`). How long until it is back, and will the PID change?
 
 Note the `MainPID` first (`systemctl show clipstr -p MainPID,NRestarts`), run the chaos script, wait 4 seconds, and look again. In the log terminal find the sentences `Main process exited`, `Scheduled restart job` and `Started`. **Copy those lines for your submission.**
 
 ### 4.2 The polite stop
 
+> [!NOTE]
 > **Predict** Now send a polite `SIGTERM`: `sudo kill -TERM $(systemctl show clipstr -p MainPID --value)`. Will `Restart=on-failure` bring Clipstr back?
 
 Check with `systemctl is-active clipstr`. Was the prediction right? Look at the log: how did uvicorn exit? Then change the unit to `Restart=always`, reload, start it, and repeat the `kill -TERM`. What changed?
 
+> [!NOTE]
 > **Think** When is it good that a service does not come back after a stop? When would you absolutely want `Restart=always`?
 
 Set the unit back to what you prefer for Clipstr and make sure it is running.
@@ -152,12 +160,13 @@ systemctl status clipstr
 
 Read the status output carefully. It shows an exit status and the service flapping between `activating (auto-restart)` and failed. Find the **exact code** (it looks like `status=203/EXEC`) and look it up: `man systemd.exec`, section *Process exit codes*.
 
+> [!WARNING]
 > **Break it**
 > Fix the typo, then add a second, different mistake of your choice (wrong `WorkingDirectory`, wrong `User`, a missing `EnvironmentFile`). For each one note: which command revealed it, and which words in the output pointed at the cause. This is the debugging loop you will use for the rest of your career: **status, then journal, then man page**.
 
 Restore a working unit before moving on.
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Part 5 - Lock it down
 
@@ -179,11 +188,13 @@ Now harden the `[Service]` section. Add directives, one or two at a time, run `d
 
 Look at the other rows `systemd-analyze security` marks with a red cross and pick more that make sense. Run the command again and keep the new output next to the old one. Your goal is a score **below 6.0**.
 
+> [!TIP]
 > **Stuck?** If a directive makes the service fail to start, systemd tells you in `status`. Remove the last one you added and try again. Clipstr keeps everything in memory, so it needs almost nothing from the filesystem.
 
+> [!NOTE]
 > **Note for OrbStack users:** OrbStack machines run in a container and neutralise some sandboxing directives at runtime, so `systemctl show` may print `NoNewPrivileges=no` even though your unit says `yes`. On a real server or in WSL they bite. Keep them in your unit anyway; the checks read your unit file.
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Level up (optional)
 
@@ -191,7 +202,7 @@ Look at the other rows `systemd-analyze security` marks with a red cross and pic
 - **Drop-ins.** Instead of editing the unit, run `sudo systemctl edit clipstr` and override `RestartSec`. Look in `/etc/systemd/system/clipstr.service.d/`. Why is this the better way to change vendor-provided units?
 - **A timer instead of cron.** Write `clipstr-report.service` and `clipstr-report.timer` that curl `/stats` every minute. Check it with `systemctl list-timers`.
 
----
+<p align="center"><img src="assets/divider.svg" alt="" width="100%"></p>
 
 ## Verify
 
