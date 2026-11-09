@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 rc=0
-if [ -f clipstr.service ] && grep -q '^ExecStart=' clipstr.service && grep -qE '^Restart=(on-failure|always)' clipstr.service; then
-  echo "- ✅ clipstr.service has ExecStart and a Restart policy"
+if [ -f clipstr.service ] && grep -q '^ExecStart=' clipstr.service && grep -qE '^Restart=(on-failure|always)' clipstr.service; then echo "- ✅ clipstr.service has ExecStart and a Restart policy"
 else echo "- ❌ clipstr.service is missing, or lacks ExecStart / Restart=on-failure|always"; rc=1; fi
 if [ -f clipstr.service ] && grep -q '^User=clipstr' clipstr.service; then echo "- ✅ the service runs as User=clipstr"
 else echo "- ❌ clipstr.service must run as User=clipstr"; rc=1; fi
-if [ -f evidence/verify.txt ] && grep -q 'ALL CHECKS PASSED' evidence/verify.txt; then echo "- ✅ evidence/verify.txt shows ALL CHECKS PASSED"
-else echo "- ❌ evidence/verify.txt must contain 'ALL CHECKS PASSED' (sudo ./verify.sh | tee evidence/verify.txt)"; rc=1; fi
-if [ -f evidence/journal.txt ] && grep -q 'status=9/KILL' evidence/journal.txt; then echo "- ✅ evidence/journal.txt shows the kill -9 and the restart"
-else echo "- ❌ evidence/journal.txt must contain the journal lines with 'status=9/KILL'"; rc=1; fi
-if [ -f evidence/security.txt ] && [ "$(grep -c 'Overall exposure level' evidence/security.txt)" -ge 2 ]; then echo "- ✅ evidence/security.txt has a before and an after score"
-else echo "- ❌ evidence/security.txt must contain two 'Overall exposure level' lines (before and after)"; rc=1; fi
+grep -q 'ALL CHECKS PASSED' SUBMISSION.md && echo "- ✅ SUBMISSION.md shows ALL CHECKS PASSED" || { echo "- ❌ paste the verify.sh output ('ALL CHECKS PASSED') into SUBMISSION.md"; rc=1; }
+grep -q 'status=9/KILL' SUBMISSION.md && echo "- ✅ SUBMISSION.md has the kill -9 journal lines" || { echo "- ❌ paste the journal lines containing 'status=9/KILL' into SUBMISSION.md"; rc=1; }
+[ "$(grep -c 'Overall exposure level' SUBMISSION.md)" -ge 2 ] && echo "- ✅ SUBMISSION.md has a before and an after security score" || { echo "- ❌ paste two 'Overall exposure level' lines (before and after) into SUBMISSION.md"; rc=1; }
 exit $rc
