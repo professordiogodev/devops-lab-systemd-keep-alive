@@ -6,7 +6,7 @@ systemctl disable --now clipstr 2>/dev/null
 rm -f /etc/systemd/system/clipstr.service
 rm -rf /etc/systemd/system/clipstr.service.d /etc/clipstr
 systemctl daemon-reload
-pkill -f 'uvicorn api.main:app' 2>/dev/null
+pkill -KILL -f 'uvicorn api.main:app' 2>/dev/null; sleep 1
 rm -rf /opt/clipstr /tmp/clipstr-manual.log
-userdel clipstr 2>/dev/null
+userdel -f clipstr 2>/dev/null
 echo "Lab environment removed."
