@@ -2,9 +2,25 @@
 
 ## The situation
 
-Friday, 18:02. Someone restarted the Clippy staging server for a kernel update. Clippy was running because one engineer had typed `nohup uvicorn ... &` in an SSH session weeks ago. After the reboot nobody started it again. Short links returned errors for three hours until a customer tweeted about it.
+```text
+POSTMORTEM - "Three hours of dead short links"            status: draft, action items open
+Trigger    : a kernel update, staging server restarted Friday 18:02
+Impact     : short links returned errors for three hours
+Detected   : by a customer who tweeted about it
+Root cause : Clippy was running only because one engineer had typed
+             `nohup uvicorn ... &` in an SSH session weeks ago
+Why         : 1. nothing started Clippy after the reboot
+              2. nothing would have restarted it after a crash either
+              3. its logs were in /tmp, a place nobody looks
 
-On Monday your lead says: *"A server should keep our app alive by itself. Not a person, not a terminal. Make it so, and then try your best to kill it."*
+Action items (owner: you)
+  AI-1  The server starts Clippy at boot, as an unprivileged user
+  AI-2  The server restarts Clippy after a crash, by itself
+  AI-3  Logs live where the server keeps logs
+  AI-4  A bug in Clippy must not become a bug in the whole server
+```
+
+On Monday your lead adds one sentence to the report: *"A server should keep our app alive by itself. Not a person, not a terminal. Make it so, and then try your best to kill it."*
 
 > **Your mission**
 > - See why the current way of running Clippy is fragile
@@ -47,7 +63,7 @@ Run it, then `curl localhost:8000/healthz`.
 
 ---
 
-## Part 2 - Build: make the server responsible
+## Part 2 (AI-1, AI-2) - Build: make the server responsible
 
 You will write a unit file by hand. The goal is a file you could explain line by line to a colleague.
 
@@ -80,7 +96,7 @@ sudo systemctl enable --now clippy
 
 ---
 
-## Part 3 - Watch it live
+## Part 3 (AI-3) - Watch it live
 
 Open the second terminal and follow the logs:
 
@@ -138,7 +154,7 @@ Restore a working unit before moving on.
 
 ---
 
-## Part 5 - Lock it down
+## Part 5 (AI-4) - Lock it down
 
 Clippy is internet-facing. If someone finds a bug in it, what could they do on this server? systemd can answer that:
 
